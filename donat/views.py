@@ -4,9 +4,9 @@ from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 
-from .models import DonatorsData, DonationsData, DonatsSourcesData
-from .serializers import DonationsSerializer
-from .schemas import DonationsSchema
+from .models import DonationsData, Event
+from .serializers import DonationsSerializer, EventFundsSerializer
+from .schemas import DonationsSchema, EventSchema
 
 
 class TopTenDonationsViewSet(ListModelMixin, viewsets.GenericViewSet):
@@ -27,3 +27,14 @@ class DonationsDataViewSet(ListModelMixin, CreateModelMixin, viewsets.GenericVie
 
     def get_queryset(self):
         return DonationsData.objects.all()
+
+class EventViewSet(ListModelMixin, CreateModelMixin, viewsets.GenericViewSet):
+    renderer_classes = (JSONRenderer,)
+    serializer_class = EventFundsSerializer
+    schema = EventSchema()
+
+    # authentication_classes = IsAuthenticated
+
+    def get_queryset(self):
+        return Event.objects.all()
+

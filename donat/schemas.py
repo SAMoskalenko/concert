@@ -56,3 +56,31 @@ class DonationsSchema(AutoSchema):
                 ),
             ]
         return fields
+
+
+class EventSchema(AutoSchema):
+    def get_description(self, path, method):
+        if method == 'GET':
+            return 'Информация по запросу'
+        if method == 'POST':
+            return 'Создание запроса'
+        return None
+
+    def get_encoding(self, path, method):
+        return 'application/json'
+
+    def get_serializer_fields(self, path, method):
+        fields = []
+        if method == 'POST':
+            fields = [
+                coreapi.Field(
+                    name='target',
+                    required=False,
+                    location="form",
+                    schema=coreschema.Integer(title='target',
+                                             default=None,
+                                             description='target'),
+                    description='target'
+                ),
+            ]
+        return fields

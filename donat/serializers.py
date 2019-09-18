@@ -1,5 +1,7 @@
+from django.db.models import Sum
 from rest_framework import serializers
-from .models import DonatorsData, DonationsData, DonatsSourcesData
+
+from .models import DonatorsData, DonationsData, DonatsSourcesData, Event
 
 
 class DonatsSerializer(serializers.ModelSerializer):
@@ -19,10 +21,6 @@ class DonationsSerializer(serializers.ModelSerializer):
     source = serializers.CharField(write_only=True)
     details = serializers.CharField(write_only=True)
 
-
-    # donator = DonatorsSerializer(read_only=True)
-    # donat_source = DonatsSerializer(read_only=True)
-
     class Meta:
         model = DonationsData
         fields = '__all__'
@@ -36,3 +34,15 @@ class DonationsSerializer(serializers.ModelSerializer):
         donation = DonationsData.objects.create(donator=donators, donat_source=donat,
                                                 summ=validated_data.get('summ'))
         return donation
+
+
+class EventFundsSerializer(serializers.ModelSerializer):
+    raised_funds = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+    def get_raised_funds(self, obj):
+        return DonationsData.objects.aggregate(Sum('summ'))['summ__sum']
