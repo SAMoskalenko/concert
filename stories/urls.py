@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('swagger.urls')),
+    path('docs/', include('stories.swagger_schema')),
     path('donations/', include('donat.urls')),
 ]

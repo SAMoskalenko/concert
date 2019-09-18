@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'donat',
     'swagger',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
