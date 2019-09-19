@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'donat',
     'swagger',
-    'drf_yasg'
+    'drf_yasg',
+    'release',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -160,4 +162,14 @@ SWAGGER_SETTINGS = {
     # 'USE_SESSION_AUTH': False,
     'SHOW_REQUEST_HEADERS': True,
     'JSON_EDITOR': True
+}
+
+ASGI_APPLICATION = 'stories.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }

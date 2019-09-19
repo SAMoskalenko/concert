@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path('release/', include('release.urls')),
     path('admin/', admin.site.urls),
     path('', include('swagger.urls')),
     path('docs/', include('stories.swagger_schema')),
