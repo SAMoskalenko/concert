@@ -8,18 +8,13 @@ import channels.layers
 
 from donat.models import DonationsData
 
-u = ''
 
 class ReleaseConsumer(WebsocketConsumer):
     def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = 'chat_%s' % self.room_name
-
-        u = self.room_group_name
-
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
+            # self.room_group_name,
+            'release_data',
             self.channel_name
         )
 
@@ -28,7 +23,7 @@ class ReleaseConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
+            'release_data',
             self.channel_name
         )
 
@@ -39,7 +34,7 @@ class ReleaseConsumer(WebsocketConsumer):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
+            'release_data',
             {
                 'type': 'chat_message',
                 'message': message
@@ -60,7 +55,8 @@ class ReleaseConsumer(WebsocketConsumer):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
+            # self.room_group_name,
+            'release_data',
             {
                 'type': 'chat_message',
                 'message': message
@@ -70,7 +66,6 @@ class ReleaseConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
-        # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message
         }))
@@ -80,7 +75,7 @@ class ReleaseConsumer(WebsocketConsumer):
     def order_offer_observer(sender, instance, **kwargs):
         message = DonationsData.objects.aggregate(Sum('summ'))['summ__sum']
         layer = channels.layers.get_channel_layer()
-        async_to_sync(layer.group_send)('chat_lobby', {
+        async_to_sync(layer.group_send)('release_data', {
             'type': 'chat_message',
             'message': message,
         })

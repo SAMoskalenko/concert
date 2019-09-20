@@ -1,11 +1,10 @@
 from django.urls import path
 
-from .views import index, room
+from .views import room
 
 
 urlpatterns = [
-    path('', index, name='index'),
-    path('<str:room_name>/', room, name='room'),
+    path('', room, name='room'),
 ]
 
 
