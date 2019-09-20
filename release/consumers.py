@@ -55,7 +55,6 @@ class ReleaseConsumer(WebsocketConsumer):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            # self.room_group_name,
             'release_data',
             {
                 'type': 'chat_message',
@@ -77,5 +76,5 @@ class ReleaseConsumer(WebsocketConsumer):
         layer = channels.layers.get_channel_layer()
         async_to_sync(layer.group_send)('release_data', {
             'type': 'chat_message',
-            'message': message,
+            'message': f'Общая сумма собранных средств {message}',
         })
